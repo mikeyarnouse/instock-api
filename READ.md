@@ -5,4 +5,5 @@ Dependencies to install:
 - Express
 - Cors
 - Knex
+- Dotenv
 - Nodemon
