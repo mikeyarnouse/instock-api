@@ -32,7 +32,6 @@ const findItem = async (req, res) => {
 
     res.json(warehouseInventories[0]);
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: `Unable to retrieve item data for item with ID ${req.params.id}`,
     });
