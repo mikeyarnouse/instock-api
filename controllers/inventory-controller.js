@@ -11,7 +11,7 @@ const index = async (_req, res) => {
 
 const findItem = async (req, res) => {
     try {
-      const itemFound = await knex("user")
+      const itemFound = await knex("inventories")
         .where({ id: req.params.id });
   
       if (itemFound.length === 0) {
@@ -21,6 +21,9 @@ const findItem = async (req, res) => {
       }
   
       const itemData = itemFound[0];
+    //   const wareHouse = await knex("warehouse")
+    //     .where(itemData.id === wareHouse.id);
+    //   itemData.warehouse_id = wareHouse.name;
       res.json(itemData);
     } catch (error) {
       res.status(500).json({
