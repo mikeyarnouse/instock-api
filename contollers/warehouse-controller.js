@@ -1,6 +1,6 @@
-const router = require('express').Router();
+const knex = require('knex')(require('../knexfile'));
 
-const findUser = async (req, res) => {
+const findWarehouse = async (req, res) => {
     try {
         const warehousefound = await knex('warehouses')
             .where({ id: req.params.id });
@@ -18,6 +18,6 @@ const findUser = async (req, res) => {
     }
 }
 
-module.export = {
-    findUser,
+module.exports = {
+    findWarehouse,
 }
