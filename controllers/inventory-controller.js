@@ -93,6 +93,24 @@ const add = async (req, res) => {
 };
 
 const update = async (req, res) => {
+  if (
+    !req.body.warehouse_id ||
+    !req.body.item_name ||
+    !req.body.description ||
+    !req.body.category ||
+    !req.body.status ||
+    !req.body.quantity
+  ) {
+    return res.status(400).json({
+      message:
+        "Please provide necessary details for the inventory item in the request",
+    });
+  } else if (isNaN(req.body.quantity)) {
+    //Checks if quantity is a valid number. Returns false if not a number
+    return res.status(400).json({
+      message: "Quantity is not a valid number",
+    });
+  }
   try {
     const itemUpdated = await knex("inventories")
       .where({ id: req.params.id })
