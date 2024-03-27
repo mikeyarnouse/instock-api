@@ -38,7 +38,32 @@ const findItem = async (req, res) => {
   }
 };
 
+const update = async (req, res) => {
+  try {
+    const itemUpdated = await knex("inventories")
+      .where({ id: req.params.id })
+      .update(req.body);
+
+    if (itemUpdated === 0) {
+      return res.status(404).json({
+        message: `Inventory item with ID ${req.params.id} not found`,
+      });
+    }
+
+    const updatedItem = await knex("inventories").where({
+      id: req.params.id,
+    });
+
+    res.json(updatedItem[0]);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to update user with ID ${req.params.id}: ${error}`,
+    });
+  }
+};
+
 module.exports = {
   index,
   findItem,
+  update,
 };
