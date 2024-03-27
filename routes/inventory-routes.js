@@ -1,6 +1,9 @@
 const router = require('express').Router();
-const userController = require('../controllers/user-controller');
+const inventoryController = require('../controllers/inventory-controller');
 
-router.route('/').get(userController.index);
+router
+    .route('/')
+    .get(inventoryController.index);
+
 
 module.exports = router;
