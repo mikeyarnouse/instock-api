@@ -38,6 +38,60 @@ const findItem = async (req, res) => {
   }
 };
 
+const add = async (req, res) => {
+  //Long conditional that just checks that every required field is filled out
+  if (
+    !req.body.warehouse_id ||
+    !req.body.item_name ||
+    !req.body.description ||
+    !req.body.category ||
+    !req.body.status ||
+    !req.body.quantity
+  ) {
+    return res.status(400).json({
+      message:
+        "Please provide necessary details for the inventory item in the request",
+    });
+  } else if (isNaN(req.body.quantity)) {
+    //Checks if quantity is a valid number. Returns false if not a number
+    return res.status(400).json({
+      message: "Quantity is not a valid number",
+    });
+  }
+
+  // Code to check if warehouse exists
+  const existingWarehouse = await knex("warehouses").where({
+    id: req.body.warehouse_id,
+  });
+  if (existingWarehouse.length === 0) {
+    return res.status(400).json({
+      message: "Please provide a valid warehouse_id",
+    });
+  }
+
+  try {
+    const result = await knex("inventories").insert(req.body); //Adds an item to the db. Only reaches here with valid fields
+
+    const newInventoryId = result[0]; //Takes the newly generated id for the item
+    const createdInventoryItem = await knex("inventories")
+      .where({ id: newInventoryId }) //Retrieves the newly created item to return
+      .select(
+        "id",
+        "warehouse_id",
+        "item_name",
+        "description",
+        "category",
+        "status",
+        "quantity"
+      );
+    res.status(201).json(createdInventoryItem);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to create new inventory item: ${error}`,
+    });
+  }
+};
+
 const update = async (req, res) => {
   try {
     const itemUpdated = await knex("inventories")
@@ -65,5 +119,6 @@ const update = async (req, res) => {
 module.exports = {
   index,
   findItem,
+  add,
   update,
 };
