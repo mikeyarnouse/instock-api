@@ -82,11 +82,60 @@ const updateWarehouse = async (req, res) => {
       );
 
     res.json(updatedWarehouse);
-  } catch (e) {}
+  } catch (e) { }
 };
+
+const addWarehouse = async (req, res) => {
+
+
+  if (
+    !req.body.warehouse_name ||
+    !req.body.address ||
+    !req.body.city ||
+    !req.body.country ||
+    !req.body.contact_name ||
+    !req.body.contact_position ||
+    !req.body.contact_phone ||
+    !req.body.contact_email
+  ) {
+    return res.status(400).json({
+      message:
+        "Data incomplete, please check input",
+    });
+  }
+
+  try {
+    const result = await knex("warehouses").insert(req.body);
+
+    const newWarehouseId = result[0];
+    const createdWarehouse = await knex("warehouses")
+      .where({ id: newWarehouseId })
+      .select(
+        "id",
+        "warehouse_name",
+        "address",
+        "city",
+        "country",
+        "contact_name",
+        "contact_position",
+        "contact_phone",
+        "contact_email"
+      );
+    res.status(201).json(createdWarehouse);
+    console.log(createdWarehouse);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to create new inventory item: ${error}`
+    });
+  }
+};
+
+
+
 
 module.exports = {
   getWarehouses,
   findWarehouse,
   updateWarehouse,
+  addWarehouse
 };
