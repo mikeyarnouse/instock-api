@@ -53,6 +53,19 @@ const findWarehouse = async (req, res) => {
 };
 
 const updateWarehouse = async (req, res) => {
+  if (
+    !req.body.warehouse_name ||
+    !req.body.address ||
+    !req.body.city ||
+    !req.body.country ||
+    !req.body.contact_name ||
+    !req.body.contact_position ||
+    !req.body.contact_phone ||
+    !req.body.contact_email
+  ) {
+    res.status(500).send({message: "All fields must be inputted"})
+  }
+
   try {
     const rowsUpdated = await knex("warehouses")
       .where({ id: req.params.id })
@@ -82,7 +95,11 @@ const updateWarehouse = async (req, res) => {
       );
 
     res.json(updatedWarehouse);
-  } catch (e) {}
+  } catch (e) {
+    res.status(500).json({
+      message: e,
+    });
+  }
 };
 
 module.exports = {
