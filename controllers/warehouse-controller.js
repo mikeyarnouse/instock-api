@@ -98,12 +98,14 @@ const getInventoryWarehouse = async (req, res) => {
         "status",
         "quantity",
       )
+
+    res.json(findWarehouse);
   }
   catch (err) {
-    req.status(404).json({
+    res.status(404).json({
       message: `Warehouse ID:${req.params.id} is not found `
     })
-    req.status(200).json({
+    res.status(200).json({
       message: `Warehouse ID:${req.params.id} found `
     })
   }
