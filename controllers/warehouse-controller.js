@@ -86,8 +86,6 @@ const updateWarehouse = async (req, res) => {
 };
 
 const addWarehouse = async (req, res) => {
-
-
   if (
     !req.body.warehouse_name ||
     !req.body.address ||
@@ -98,7 +96,7 @@ const addWarehouse = async (req, res) => {
     !req.body.contact_phone ||
     !req.body.contact_email
   ) {
-    return res.status(400).json({
+    return res.status(500).json({
       message:
         "Data incomplete, please check input",
     });
@@ -129,8 +127,6 @@ const addWarehouse = async (req, res) => {
     });
   }
 };
-
-
 
 
 module.exports = {
