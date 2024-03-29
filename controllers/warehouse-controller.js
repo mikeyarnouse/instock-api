@@ -105,6 +105,7 @@ const updateWarehouse = async (req, res) => {
       );
 
     res.json(updatedWarehouse);
+
   } catch (e) {
     res.status(500).json({
       message: e,
@@ -112,8 +113,37 @@ const updateWarehouse = async (req, res) => {
   }
 };
 
+
+const getInventoryWarehouse = async (req, res) => {
+  try {
+    const findWarehouse = await knex("inventories")
+      .where({
+        warehouse_id: req.params.id
+      })
+      .select(
+        "id",
+        "item_name",
+        "status",
+        "category",
+        "quantity",
+      )
+
+    res.json(findWarehouse);
+  }
+  catch (err) {
+    res.status(404).json({
+      message: `Warehouse ID:${req.params.id} is not found `
+    })
+    res.status(200).json({
+      message: `Warehouse ID:${req.params.id} found `
+    })
+  }
+}
+
+
 module.exports = {
   getWarehouses,
   findWarehouse,
   updateWarehouse,
+  getInventoryWarehouse
 };
