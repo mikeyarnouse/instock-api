@@ -52,6 +52,7 @@ const findWarehouse = async (req, res) => {
   }
 };
 
+
 const updateWarehouse = async (req, res) => {
   if (
     !req.body.warehouse_name ||
@@ -64,6 +65,15 @@ const updateWarehouse = async (req, res) => {
     !req.body.contact_email
   ) {
     res.status(500).send({message: "All fields must be inputted"})
+    return
+  }
+  else if (!req.body.contact_email.includes("@") || !req.body.contact_email.includes(".com")){
+    res.status(500).send({message: "Invalid Email Address"})
+    return
+  } 
+  else if (req.body.contact_phone.length!==17){
+    res.status(500).send({message: "Invalid Phone Number Format, Must Use Format: +1 (XXX) XXX-XXXX"})
+    return
   }
 
   try {
