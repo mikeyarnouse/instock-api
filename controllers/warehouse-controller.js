@@ -52,7 +52,30 @@ const findWarehouse = async (req, res) => {
   }
 };
 
+
 const updateWarehouse = async (req, res) => {
+  if (
+    !req.body.warehouse_name ||
+    !req.body.address ||
+    !req.body.city ||
+    !req.body.country ||
+    !req.body.contact_name ||
+    !req.body.contact_position ||
+    !req.body.contact_phone ||
+    !req.body.contact_email
+  ) {
+    res.status(500).send({message: "All fields must be inputted"})
+    return
+  }
+  else if (!req.body.contact_email.includes("@") || !req.body.contact_email.includes(".com")){
+    res.status(500).send({message: "Invalid Email Address"})
+    return
+  } 
+  else if (req.body.contact_phone.length!==17){
+    res.status(500).send({message: "Invalid Phone Number Format, Must Use Format: +1 (XXX) XXX-XXXX"})
+    return
+  }
+
   try {
     const rowsUpdated = await knex("warehouses")
       .where({ id: req.params.id })
@@ -82,11 +105,45 @@ const updateWarehouse = async (req, res) => {
       );
 
     res.json(updatedWarehouse);
-  } catch (e) {}
+
+  } catch (e) {
+    res.status(500).json({
+      message: e,
+    });
+  }
 };
+
+
+const getInventoryWarehouse = async (req, res) => {
+  try {
+    const findWarehouse = await knex("inventories")
+      .where({
+        warehouse_id: req.params.id
+      })
+      .select(
+        "id",
+        "item_name",
+        "status",
+        "category",
+        "quantity",
+      )
+
+    res.json(findWarehouse);
+  }
+  catch (err) {
+    res.status(404).json({
+      message: `Warehouse ID:${req.params.id} is not found `
+    })
+    res.status(200).json({
+      message: `Warehouse ID:${req.params.id} found `
+    })
+  }
+}
+
 
 module.exports = {
   getWarehouses,
   findWarehouse,
   updateWarehouse,
+  getInventoryWarehouse
 };
