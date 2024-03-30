@@ -96,10 +96,16 @@ const addWarehouse = async (req, res) => {
     !req.body.contact_phone ||
     !req.body.contact_email
   ) {
-    return res.status(500).json({
-      message:
-        "Data incomplete, please check input",
-    });
+    res.status(500).send({message: "All fields must be inputted"})
+    return
+  }
+  else if (!req.body.contact_email.includes("@") || !req.body.contact_email.includes(".com")){
+    res.status(500).send({message: "Invalid Email Address"})
+    return
+  } 
+  else if (req.body.contact_phone.length!==17){
+    res.status(500).send({message: "Invalid Phone Number Format, Must Use Format: +1 (XXX) XXX-XXXX"})
+    return
   }
 
   try {
