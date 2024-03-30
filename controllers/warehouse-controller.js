@@ -52,7 +52,6 @@ const findWarehouse = async (req, res) => {
   }
 };
 
-
 const updateWarehouse = async (req, res) => {
   if (
     !req.body.warehouse_name ||
@@ -105,7 +104,6 @@ const updateWarehouse = async (req, res) => {
       );
 
     res.json(updatedWarehouse);
-
   } catch (e) {
     res.status(500).json({
       message: e,
@@ -113,6 +111,54 @@ const updateWarehouse = async (req, res) => {
   }
 };
 
+const addWarehouse = async (req, res) => {
+  if (
+    !req.body.warehouse_name ||
+    !req.body.address ||
+    !req.body.city ||
+    !req.body.country ||
+    !req.body.contact_name ||
+    !req.body.contact_position ||
+    !req.body.contact_phone ||
+    !req.body.contact_email
+  ) {
+    res.status(500).send({message: "All fields must be inputted"})
+    return
+  }
+  else if (!req.body.contact_email.includes("@") || !req.body.contact_email.includes(".com")){
+    res.status(500).send({message: "Invalid Email Address"})
+    return
+  } 
+  else if (req.body.contact_phone.length!==17){
+    res.status(500).send({message: "Invalid Phone Number Format, Must Use Format: +1 (XXX) XXX-XXXX"})
+    return
+  }
+
+  try {
+    const result = await knex("warehouses").insert(req.body);
+
+    const newWarehouseId = result[0];
+    const createdWarehouse = await knex("warehouses")
+      .where({ id: newWarehouseId })
+      .select(
+        "id",
+        "warehouse_name",
+        "address",
+        "city",
+        "country",
+        "contact_name",
+        "contact_position",
+        "contact_phone",
+        "contact_email"
+      );
+    res.status(201).json(createdWarehouse);
+    console.log(createdWarehouse);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to create new inventory item: ${error}`
+    });
+  }
+};
 
 const getInventoryWarehouse = async (req, res) => {
   try {
@@ -140,10 +186,10 @@ const getInventoryWarehouse = async (req, res) => {
   }
 }
 
-
 module.exports = {
   getWarehouses,
   findWarehouse,
   updateWarehouse,
+  addWarehouse,
   getInventoryWarehouse
 };
