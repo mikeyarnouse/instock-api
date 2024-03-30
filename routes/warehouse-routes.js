@@ -11,5 +11,8 @@ router
   .get(warehouseController.findWarehouse)
   .put(warehouseController.updateWarehouse)
 
+router
+  .route("/:id/inventories")
+  .get(warehouseController.getInventoryWarehouse)
 module.exports = router;
 
