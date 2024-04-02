@@ -68,7 +68,6 @@ const getWarehouses = async (req, res) => {
 };
 
 const findWarehouse = async (req, res) => {
-  console.log(req.params.id);
   try {
     const warehousefound = await knex("warehouses")
       .where({
@@ -207,7 +206,6 @@ const addWarehouse = async (req, res) => {
         "contact_email"
       );
     res.status(201).json(createdWarehouse);
-    console.log(createdWarehouse);
   } catch (error) {
     res.status(500).json({
       message: `Unable to create new inventory item: ${error}`,
