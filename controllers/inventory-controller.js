@@ -97,13 +97,13 @@ const add = async (req, res) => {
 };
 
 const update = async (req, res) => {
+  console.log(req.body)
   if (
     !req.body.warehouse_id ||
     !req.body.item_name ||
     !req.body.description ||
     !req.body.category ||
-    !req.body.status ||
-    !req.body.quantity
+    !req.body.status
   ) {
     return res.status(400).json({
       message:
