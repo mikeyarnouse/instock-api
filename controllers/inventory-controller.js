@@ -109,7 +109,7 @@ const update = async (req, res) => {
       message:
         "Please provide necessary details for the inventory item in the request",
     });
-  } else if (isNaN(req.body.quantity)) {
+  } else if (isNaN(req.body.quantity) || req.body.quantity < 0) {
     //Checks if quantity is a valid number. Returns false if not a number
     return res.status(400).json({
       message: "Quantity is not a valid number",
